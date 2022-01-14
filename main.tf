@@ -67,27 +67,27 @@ resource "aws_security_group" "allow_web_traffic" {
   vpc_id      = aws_vpc.my-aws-vpc.id
 
   ingress {
-    description      = "Allow HTTPS in-bound traffic from all ip addresses"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.my-aws-vpc.cidr_block]
+    description = "Allow HTTPS in-bound traffic from all ip addresses"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
   }
 
-   ingress {
-    description      = "Allow HTTP in-bound traffic from all ip addresses"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.my-aws-vpc.cidr_block]
+  ingress {
+    description = "Allow HTTP in-bound traffic from all ip addresses"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
   }
 
-   ingress {
-    description      = "Allow SSH in-bound traffic from all ip addresses"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.my-aws-vpc.cidr_block]
+  ingress {
+    description = "Allow SSH in-bound traffic from all ip addresses"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
   }
 
 
@@ -104,3 +104,15 @@ resource "aws_security_group" "allow_web_traffic" {
     Name = "allow_web"
   }
 }
+
+# create a network interface with an ip in the subnet for internet connection
+resource "aws_network_interface" "test" {
+  subnet_id       = aws_subnet.dev-subnet.id
+  private_ips     = ["10.0.1.50"]
+  security_groups = [aws_security_group.allow_web_traffic.id]
+
+  tags = {
+    Name = "My-Test-Network-Interface"
+  }
+}
+
