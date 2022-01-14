@@ -120,6 +120,7 @@ resource "aws_network_interface" "test" {
 resource "aws_eip" "my-elastic-ip" {
   vpc                       = true
   network_interface         = aws_network_interface.test.id
-  associate_with_private_ip = "10.0.0.10"
+  associate_with_private_ip = aws_network_interface.test.private_ip
+  depends_on                = [aws_internet_gateway.dev-gw]
 }
 
