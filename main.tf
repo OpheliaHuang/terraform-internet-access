@@ -72,7 +72,7 @@ resource "aws_security_group" "allow_web_traffic" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -80,7 +80,7 @@ resource "aws_security_group" "allow_web_traffic" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -88,7 +88,7 @@ resource "aws_security_group" "allow_web_traffic" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.my-aws-vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
 
@@ -143,8 +143,7 @@ resource "aws_instance" "web-server-instance" {
     sudo apt update -y
     sudo apt install apache2 -y
     sudo systemctl start apache2
-    sudo bash -c 'echo this is my first web server on aws > /var/www/html/index.html'
-    ls /var
+    sudo bash -c 'echo your very first web server > /var/www/html/index.html'
   EOF
 
   tags = {
