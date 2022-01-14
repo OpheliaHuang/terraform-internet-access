@@ -1,6 +1,7 @@
 variable "aws_access_key" { type = string }
 variable "aws_secret_key" { type = string }
 variable "region" { default = "eu-west-1" }
+variable "avaliablity_zone" { default = "eu-west-1c" }
 
 provider "aws" {
   region     = var.region
@@ -124,3 +125,35 @@ resource "aws_eip" "my-elastic-ip" {
   depends_on                = [aws_internet_gateway.dev-gw]
 }
 
+# create an ubuntu instance
+resource "aws_instance" "web-server-instance" {
+
+  ami               = "ami-08ca3fed11864d6bb"
+  instance_type     = "t2.micro"
+  availability_zone = var.avaliablity_zone
+  key_name          = "main-key"
+
+  network_interface {
+    network_interface_id = aws_network_interface.test.id
+    device_index         = 0
+  }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo apt update -y
+    sudo apt install apache2 -y
+    sudo systemctl start apache2
+    sudo bash -c 'echo this is my first web server on aws > /var/www/html/index.html'
+    ls /var
+  EOF
+
+  tags = {
+    Name = "web-server"
+  }
+
+
+}
+
+output "test-avaliability-zone" {
+  value = var.avaliablity_zone
+}
